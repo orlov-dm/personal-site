@@ -1,0 +1,19 @@
+{
+  "name": "orlov-dm-personal",
+  "version": "1.0.0",
+  "description": "Dmitrii Orlov - personal site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orlov-dm/personal-site.git"
+  },
+  "author": "Dmitrii Orlov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/orlov-dm/personal-site/issues"
+  },
+  "homepage": "https://github.com/orlov-dm/personal-site#readme"
+}

@@ -1,0 +1,100 @@
+html, body, #root {
+  height: 100%;
+  width: 100%;
+
+  font-family: 'Righteous',-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif;
+  font-size: 1em;
+  font-weight: normal;
+
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+ #root {
+  overflow:hidden;
+  display:block;
+}
+
+.background {
+  overflow:hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+.background > .background__video {
+  display: block;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /* z-index: 1; */
+}
+@media screen and (max-aspect-ratio: 1920/1080) {
+  .background > .background__video {
+    height: 100%;
+  }
+}
+@media screen and (min-aspect-ratio: 1920/1080) {
+  .background > .background__video {
+    width: 100%;
+  }
+}
+
+.info {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: auto;
+  height: auto;
+  -webkit-transform: translate(-50%,-50%);
+  -moz-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  -o-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+
+  color: white;
+
+  line-height: 2em;
+}
+
+.info :not(:last-child) {
+  margin-bottom: 30px;
+}
+
+.info__label {
+  text-align: left;
+}
+.info__text {
+  text-align: right;
+}
+.info__important {
+  font-weight: bold;
+  color: white;
+}
+
+.info__contacts :not(:last-child) {
+  margin-right: 15px;
+}
+a.icon {
+  text-decoration: none;
+}
+.icon {
+  height: 64px;
+  width: 64px;
+}
+.icon > svg {
+  fill: white;
+  height: 64px;
+  width: 64px;
+}
+.icon__telegram > svg {
+  height: 56px;
+  width: 56px;
+}
+
+/* .icon svg path {
+  fill: white !important;
+} */
