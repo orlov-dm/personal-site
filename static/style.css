@@ -29,7 +29,9 @@ html, body, #root {
   position: fixed;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
   /* z-index: 1; */
 }
 @media screen and (max-aspect-ratio: 1920/1080) {
@@ -49,11 +51,9 @@ html, body, #root {
   left: 50%;
   width: auto;
   height: auto;
-  -webkit-transform: translate(-50%,-50%);
-  -moz-transform: translate(-50%,-50%);
-  -ms-transform: translate(-50%,-50%);
-  -o-transform: translate(-50%,-50%);
-  transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,calc(-50% - .5px));
+      -ms-transform: translate(-50%,calc(-50% - .5px));
+          transform: translate(-50%,calc(-50% - .5px));
 
   color: white;
 
