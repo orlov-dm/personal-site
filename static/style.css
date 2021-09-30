@@ -70,6 +70,11 @@ html, body, #root {
 .info__text {
   text-align: right;
 }
+.info__logo {
+  font-weight: bold;
+  font-size: 2em;
+  text-decoration: none;
+}
 .info__important {
   font-weight: bold;
   color: white;
@@ -95,6 +100,9 @@ a.icon {
   width: 56px;
 }
 
+a, a:visited, a:hover, a:active {
+  color: inherit;
+}
 /* .icon svg path {
   fill: white !important;
 } */
