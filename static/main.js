@@ -19,6 +19,8 @@
   const particles = [];
   let width = 0;
   let height = 0;
+  let parallaxX = 0;
+  let parallaxY = 0;
   let animation = 0;
   let lastFrame = 0;
 
@@ -51,13 +53,22 @@
   }
 
   function draw(time, still = false) {
+    if (!still) {
+      const targetX = pointer.active ? (0.5 - pointer.x / width) * 24 : 0;
+      const targetY = pointer.active ? (0.5 - pointer.y / height) * 18 : 0;
+      parallaxX += (targetX - parallaxX) * 0.045;
+      parallaxY += (targetY - parallaxY) * 0.045;
+    }
+
     context.clearRect(0, 0, width, height);
 
     for (let i = 0; i < particles.length; i += 1) {
       const particle = particles[i];
+      const drawX = particle.x + parallaxX;
+      const drawY = particle.y + parallaxY;
       const wave = still ? 0.72 : 0.55 + (Math.sin(time * 0.0007 + particle.phase) + 1) * 0.22;
-      const dx = particle.x - pointer.x;
-      const dy = particle.y - pointer.y;
+      const dx = drawX - pointer.x;
+      const dy = drawY - pointer.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
 
       if (!still) {
@@ -80,22 +91,24 @@
       context.fillStyle = `rgba(${particle.tint}, ${wave})`;
       context.shadowColor = `rgba(${particle.tint}, ${wave})`;
       context.shadowBlur = particle.radius > 1.4 ? 13 : 7;
-      context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+      context.arc(drawX, drawY, particle.radius, 0, Math.PI * 2);
       context.fill();
       context.shadowBlur = 0;
 
       for (let j = i + 1; j < particles.length; j += 1) {
         const other = particles[j];
-        const lineX = particle.x - other.x;
-        const lineY = particle.y - other.y;
+        const otherX = other.x + parallaxX;
+        const otherY = other.y + parallaxY;
+        const lineX = drawX - otherX;
+        const lineY = drawY - otherY;
         const lineDistance = Math.sqrt(lineX * lineX + lineY * lineY);
         if (lineDistance < 112) {
           const alpha = (1 - lineDistance / 112) * 0.19;
           context.beginPath();
           context.strokeStyle = `rgba(169, 196, 255, ${alpha})`;
           context.lineWidth = 0.7;
-          context.moveTo(particle.x, particle.y);
-          context.lineTo(other.x, other.y);
+          context.moveTo(drawX, drawY);
+          context.lineTo(otherX, otherY);
           context.stroke();
         }
       }
