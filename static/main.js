@@ -17,6 +17,8 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const pointer = { x: -1000, y: -1000, active: false };
   const particles = [];
+  const wind = [];
+  const comets = [];
   let width = 0;
   let height = 0;
   let parallaxX = 0;
@@ -36,7 +38,7 @@
     canvas.height = Math.round(height * pixelRatio);
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
-    const targetCount = Math.max(42, Math.min(125, Math.round((width * height) / 12500)));
+    const targetCount = Math.max(52, Math.min(160, Math.round((width * height) / 10000)));
     particles.length = 0;
     for (let i = 0; i < targetCount; i += 1) {
       particles.push({
@@ -49,7 +51,103 @@
         tint: Math.random() > 0.5 ? '118, 224, 255' : '190, 157, 255'
       });
     }
+    wind.length = 0;
+    for (let i = 0; i < 24; i += 1) wind.push(createWind());
+    comets.length = 0;
+    for (let i = 0; i < 3; i += 1) {
+      const comet = {};
+      resetComet(comet, i === 0);
+      comets.push(comet);
+    }
     draw(0, true);
+  }
+
+  function createWind() {
+    return {
+      x: random(0, width),
+      y: random(0, height),
+      vx: random(0.22, 0.58),
+      vy: random(0.05, 0.2),
+      length: random(10, 34),
+      alpha: random(0.035, 0.095)
+    };
+  }
+
+  function resetComet(comet, initial = false) {
+    comet.x = initial ? random(width * 0.12, width * 0.7) : random(-width * 0.18, width * 0.8);
+    comet.y = initial ? random(90, height * 0.48) : random(-height * 0.12, height * 0.35);
+    comet.vx = random(1.45, 2.35);
+    comet.vy = random(0.72, 1.28);
+    comet.length = random(100, 165);
+    comet.alpha = random(0.5, 0.74);
+    comet.wait = initial ? 0 : random(1000, 3000);
+  }
+
+  function drawSpaceWind(still) {
+    for (const wisp of wind) {
+      if (!still) {
+        wisp.x += wisp.vx;
+        wisp.y += wisp.vy;
+        if (wisp.x > width + wisp.length || wisp.y > height + wisp.length) {
+          wisp.x = random(-wisp.length, width * 0.35);
+          wisp.y = random(-wisp.length, height * 0.45);
+        }
+      }
+
+      const headX = wisp.x + parallaxX * 0.45;
+      const headY = wisp.y + parallaxY * 0.45;
+      const tailX = headX - wisp.length;
+      const tailY = headY - wisp.length * 0.34;
+      const gradient = context.createLinearGradient(tailX, tailY, headX, headY);
+      gradient.addColorStop(0, 'rgba(136, 210, 255, 0)');
+      gradient.addColorStop(1, `rgba(170, 224, 255, ${wisp.alpha})`);
+      context.beginPath();
+      context.strokeStyle = gradient;
+      context.lineWidth = 0.8;
+      context.moveTo(tailX, tailY);
+      context.lineTo(headX, headY);
+      context.stroke();
+    }
+  }
+
+  function drawComets(still) {
+    for (const comet of comets) {
+      if (!still && comet.wait > 0) {
+        comet.wait = Math.max(0, comet.wait - 30);
+        continue;
+      }
+      if (!still) {
+        comet.x += comet.vx;
+        comet.y += comet.vy;
+      }
+
+      const headX = comet.x + parallaxX * 0.7;
+      const headY = comet.y + parallaxY * 0.7;
+      const tailX = headX - comet.vx * comet.length;
+      const tailY = headY - comet.vy * comet.length;
+      const gradient = context.createLinearGradient(tailX, tailY, headX, headY);
+      gradient.addColorStop(0, 'rgba(171, 219, 255, 0)');
+      gradient.addColorStop(0.72, `rgba(186, 222, 255, ${comet.alpha * 0.32})`);
+      gradient.addColorStop(1, `rgba(229, 246, 255, ${comet.alpha})`);
+      context.beginPath();
+      context.strokeStyle = gradient;
+      context.lineWidth = 1.65;
+      context.moveTo(tailX, tailY);
+      context.lineTo(headX, headY);
+      context.stroke();
+
+      context.beginPath();
+      context.fillStyle = `rgba(231, 247, 255, ${comet.alpha})`;
+      context.shadowColor = 'rgba(161, 220, 255, .8)';
+      context.shadowBlur = 12;
+      context.arc(headX, headY, 1.5, 0, Math.PI * 2);
+      context.fill();
+      context.shadowBlur = 0;
+
+      if (!still && (comet.x > width + comet.length || comet.y > height + comet.length)) {
+        resetComet(comet);
+      }
+    }
   }
 
   function draw(time, still = false) {
@@ -61,6 +159,7 @@
     }
 
     context.clearRect(0, 0, width, height);
+    drawSpaceWind(still);
 
     for (let i = 0; i < particles.length; i += 1) {
       const particle = particles[i];
@@ -113,6 +212,8 @@
         }
       }
     }
+
+    drawComets(still);
   }
 
   function animate(time) {
