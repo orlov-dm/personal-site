@@ -74,13 +74,30 @@
   }
 
   function resetComet(comet, initial = false) {
-    comet.x = initial ? random(width * 0.12, width * 0.7) : random(-width * 0.18, width * 0.8);
-    comet.y = initial ? random(90, height * 0.48) : random(-height * 0.12, height * 0.35);
-    comet.vx = random(1.45, 2.35);
-    comet.vy = random(0.72, 1.28);
+    const speed = random(1.45, 2.35);
+    if (initial) {
+      comet.x = random(width * 0.12, width * 0.88);
+      comet.y = random(height * 0.08, height * 0.72);
+      const angle = random(0, Math.PI * 2);
+      comet.vx = Math.cos(angle) * speed;
+      comet.vy = Math.sin(angle) * speed;
+    } else {
+      const edge = Math.floor(random(0, 4));
+      const spread = random(-0.65, 0.65);
+      const angle = [
+        spread,
+        Math.PI + spread,
+        Math.PI / 2 + spread,
+        -Math.PI / 2 + spread
+      ][edge];
+      comet.x = edge === 0 ? -20 : edge === 1 ? width + 20 : random(0, width);
+      comet.y = edge === 2 ? -20 : edge === 3 ? height + 20 : random(0, height);
+      comet.vx = Math.cos(angle) * speed;
+      comet.vy = Math.sin(angle) * speed;
+    }
     comet.length = random(100, 165);
     comet.alpha = random(0.5, 0.74);
-    comet.wait = initial ? 0 : random(1000, 3000);
+    comet.wait = initial ? 0 : random(2200, 5200);
   }
 
   function drawSpaceWind(still) {
@@ -144,7 +161,7 @@
       context.fill();
       context.shadowBlur = 0;
 
-      if (!still && (comet.x > width + comet.length || comet.y > height + comet.length)) {
+      if (!still && (comet.x < -comet.length || comet.x > width + comet.length || comet.y < -comet.length || comet.y > height + comet.length)) {
         resetComet(comet);
       }
     }

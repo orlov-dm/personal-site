@@ -264,6 +264,15 @@ h1, h2, h3 {
   background: linear-gradient(145deg, rgba(23, 29, 57, .83), var(--panel));
   box-shadow: 0 20px 70px rgba(0, 0, 0, .12);
   backdrop-filter: blur(12px);
+  transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+}
+
+@media (hover: hover) {
+  .work-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(161, 240, 255, .32);
+    box-shadow: 0 26px 80px rgba(0, 0, 0, .22), 0 0 32px rgba(104, 173, 255, .06);
+  }
 }
 
 .card-topline { display: flex; justify-content: space-between; gap: 12px; color: #8e97b5; font-size: .66rem; letter-spacing: .1em; }
@@ -341,7 +350,7 @@ h1, h2, h3 {
   .site-header nav a:first-child { display: none; }
   .hero { padding-top: 74px; }
   .eyebrow { flex-wrap: wrap; font-size: .67rem; }
-  .hero h1 { font-size: clamp(2.6rem, 12.5vw, 3.8rem); }
+  .hero h1 { font-size: clamp(2.3rem, 11.5vw, 3.6rem); line-height: 1.06; }
   .hero-copy { font-size: .95rem; }
   .hero-actions { width: 100%; }
   .button { flex: 1; }
